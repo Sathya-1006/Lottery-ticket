@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_TICKETS 100
+#define WINNING_NUMBERS_COUNT 3
+
+struct Details {
+    char name[20];
+    double lotnum[MAX_TICKETS];
+    int n;
+};
+
+void lottery(struct Details *v);
+int isWinningTicket(double ticket);
+
+int main() {
+    struct Details v1;
+
+    printf("Enter your name: ");
+    scanf("%s", v1.name);
+    
+    printf("HOW MANY TICKETS DO YOU HAVE? (max %d): ", MAX_TICKETS);
+    scanf("%d", &v1.n);
+    if (v1.n > MAX_TICKETS) {
+        printf("You can only enter a maximum of %d tickets.\n", MAX_TICKETS);
+        return 1;
+    }
+
+    lottery(&v1);
+    return 0;
+}
+
+void lottery(struct Details *v) {
+    int i;
+    double totalWinnings = 0.0;
+    const double prizeMoney = 100000.0;
+
+    for (i = 0; i < v->n; i++) {
+        printf("Enter your 4 Digit ticket number: ");
+        scanf("%lf", &v->lotnum[i]);
+
+        if (v->lotnum[i] < 1000 || v->lotnum[i] > 9999) {
+            printf("Invalid ticket number! Please enter a 4-digit number.\n");
+            i--;
+            continue;
+        }
+
+        if (isWinningTicket(v->lotnum[i])) {
+            printf("HURRAY!! YOU WON, %s! Prize money = Rs.%.2f\n", v->name, prizeMoney);
+            totalWinnings += prizeMoney;
+        } else {
+            printf("Better luck next time!\n");
+        }
+    }
+
+    if (totalWinnings > 0) {
+        printf("Total winnings for %s: Rs.%.2f\n", v->name, totalWinnings);
+    } else {
+        printf("Sorry, %s. You didn't win anything this time.\n", v->name);
+    }
+}
+
+int isWinningTicket(double ticket) {
+    const double winningNumbers[WINNING_NUMBERS_COUNT] = {7777, 1234, 4321};
+
+    for (int i = 0; i < WINNING_NUMBERS_COUNT; i++) {
+        if (ticket == winningNumbers[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
